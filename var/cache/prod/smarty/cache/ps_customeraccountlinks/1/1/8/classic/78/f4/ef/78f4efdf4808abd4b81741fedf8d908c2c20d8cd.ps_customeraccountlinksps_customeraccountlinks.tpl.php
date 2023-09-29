@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 4.3.1, created on 2023-09-28 14:02:52
+/* Smarty version 4.3.1, created on 2023-09-29 22:55:04
   from 'module:ps_customeraccountlinksps_customeraccountlinks.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.3.1',
-  'unifunc' => 'content_65156b6c51afb2_80657875',
+  'unifunc' => 'content_651739a842c048_46176038',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -18,13 +18,13 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 31536000,
 ),true)) {
-function content_65156b6c51afb2_80657875 (Smarty_Internal_Template $_smarty_tpl) {
+function content_651739a842c048_46176038 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->smarty->ext->_tplFunction->registerTplFunctions($_smarty_tpl, array (
   'renderLogo' => 
   array (
     'compiled_filepath' => 'C:\\wamp64\\www\\presta-tests\\var\\cache\\prod\\smarty\\compile\\classiclayouts_layout_full_width_tpl\\f5\\c0\\37\\f5c0371a2854e6c5855903e46eeee6de3d8bbe77_2.file.helpers.tpl.php',
     'uid' => 'f5c0371a2854e6c5855903e46eeee6de3d8bbe77',
-    'call_name' => 'smarty_template_function_renderLogo_121078147865156b64a8b368_24101893',
+    'call_name' => 'smarty_template_function_renderLogo_1056031252651739a4ee8537_74508192',
   ),
 ));
 ?>

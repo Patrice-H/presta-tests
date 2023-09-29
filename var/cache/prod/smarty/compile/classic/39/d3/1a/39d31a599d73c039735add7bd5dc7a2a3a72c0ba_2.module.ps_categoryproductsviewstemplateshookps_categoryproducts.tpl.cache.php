@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 4.3.1, created on 2023-09-29 12:28:11
+/* Smarty version 4.3.1, created on 2023-09-29 23:46:02
   from 'module:ps_categoryproductsviewstemplateshookps_categoryproducts.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.3.1',
-  'unifunc' => 'content_6516a6bbe2ab32_55945998',
+  'unifunc' => 'content_6517459a845570_04952830',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -21,9 +21,9 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:catalog/_partials/productlist.tpl' => 1,
   ),
 ),false)) {
-function content_6516a6bbe2ab32_55945998 (Smarty_Internal_Template $_smarty_tpl) {
+function content_6517459a845570_04952830 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_checkPlugins(array(0=>array('file'=>'C:\\wamp64\\www\\presta-tests\\vendor\\smarty\\smarty\\libs\\plugins\\modifier.count.php','function'=>'smarty_modifier_count',),));
-$_smarty_tpl->compiled->nocache_hash = '17440813266516a6bb49a973_37716708';
+$_smarty_tpl->compiled->nocache_hash = '10363440466517459a835d13_42547501';
 ?>
 <section class="featured-products clearfix mt-3">
   <h2>
