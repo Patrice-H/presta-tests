@@ -12,7 +12,7 @@ php_value upload_max_filesize 10M
 
 php_value post_max_size 20M
 
-php_value memory_limit 32M
+php_value memory_limit 128M
 
 #Domain: localhost
 RewriteRule . - [E=REWRITEBASE:/presta-tests/]
