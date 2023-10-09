@@ -11,7 +11,7 @@ abstract class ProductListingFrontController extends ProductListingFrontControll
 {
         /*
     * module: ybc_themeconfig
-    * date: 2023-10-09 15:53:10
+    * date: 2023-10-09 17:01:55
     * version: 1.0.1
     */
     protected function getAjaxProductSearchVariables()

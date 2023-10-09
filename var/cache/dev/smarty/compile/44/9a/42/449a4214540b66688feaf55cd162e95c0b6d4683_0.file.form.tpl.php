@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 4.3.1, created on 2023-10-09 16:10:09
+/* Smarty version 4.3.1, created on 2023-10-09 17:06:23
   from 'C:\wamp64\www\presta-tests\modules\ps_mainmenu\views\templates\admin\_configure\helpers\form\form.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.3.1',
-  'unifunc' => 'content_652409c1218d42_75379096',
+  'unifunc' => 'content_652416ef647999_55884755',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_652409c1218d42_75379096 (Smarty_Internal_Template $_smarty_tpl) {
+function content_652416ef647999_55884755 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_loadInheritance();
 $_smarty_tpl->inheritance->init($_smarty_tpl, true);
 ?>
@@ -28,23 +28,23 @@ $_smarty_tpl->inheritance->init($_smarty_tpl, true);
 
 
 <?php 
-$_smarty_tpl->inheritance->instanceBlock($_smarty_tpl, 'Block_1892292815652409c1196229_53220620', "script");
+$_smarty_tpl->inheritance->instanceBlock($_smarty_tpl, 'Block_240648427652416ef62a418_50296101', "script");
 ?>
 
 
 <?php 
-$_smarty_tpl->inheritance->instanceBlock($_smarty_tpl, 'Block_2018780959652409c11a2b62_80950884', "input");
+$_smarty_tpl->inheritance->instanceBlock($_smarty_tpl, 'Block_2020213660652416ef6367f6_87966603', "input");
 ?>
 
 <?php $_smarty_tpl->inheritance->endChild($_smarty_tpl, "helpers/form/form.tpl");
 }
 /* {block "script"} */
-class Block_1892292815652409c1196229_53220620 extends Smarty_Internal_Block
+class Block_240648427652416ef62a418_50296101 extends Smarty_Internal_Block
 {
 public $subBlocks = array (
   'script' => 
   array (
-    0 => 'Block_1892292815652409c1196229_53220620',
+    0 => 'Block_240648427652416ef62a418_50296101',
   ),
 );
 public function callBlock(Smarty_Internal_Template $_smarty_tpl) {
@@ -125,12 +125,12 @@ function move(up)
 }
 /* {/block "script"} */
 /* {block "input"} */
-class Block_2018780959652409c11a2b62_80950884 extends Smarty_Internal_Block
+class Block_2020213660652416ef6367f6_87966603 extends Smarty_Internal_Block
 {
 public $subBlocks = array (
   'input' => 
   array (
-    0 => 'Block_2018780959652409c11a2b62_80950884',
+    0 => 'Block_2020213660652416ef6367f6_87966603',
   ),
 );
 public function callBlock(Smarty_Internal_Template $_smarty_tpl) {
