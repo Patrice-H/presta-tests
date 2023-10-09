@@ -24,11 +24,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-use PrestaShop\PrestaShop\Adapter\BestSales\BestSalesProductSearchProvider;
+use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
-use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+use PrestaShop\PrestaShop\Adapter\BestSales\BestSalesProductSearchProvider;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
@@ -40,13 +41,12 @@ if (!defined('_PS_VERSION_')) {
 class Ps_BestSellers extends Module implements WidgetInterface
 {
     private $templateFile;
-
+    protected static $cache_new_products;
     public function __construct()
     {
         $this->name = 'ps_bestsellers';
-        $this->tab = 'front_office_features';
         $this->author = 'PrestaShop';
-        $this->version = '1.0.6';
+        $this->version = '1.0.3';
         $this->need_instance = 0;
 
         $this->ps_versions_compliancy = [
@@ -57,8 +57,8 @@ class Ps_BestSellers extends Module implements WidgetInterface
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->displayName = $this->trans('Top-sellers block', [], 'Modules.Bestsellers.Admin');
-        $this->description = $this->trans('Show your visitors what are your top-selling products directly on your homepage.', [], 'Modules.Bestsellers.Admin');
+        $this->displayName = $this->trans('Top-sellers block', array(), 'Modules.Bestsellers.Admin');
+        $this->description = $this->trans('Adds a block displaying your store\'s top-selling products.', array(), 'Modules.Bestsellers.Admin');
 
         $this->templateFile = 'module:ps_bestsellers/views/templates/hook/ps_bestsellers.tpl';
     }
@@ -68,12 +68,14 @@ class Ps_BestSellers extends Module implements WidgetInterface
         $this->_clearCache('*');
 
         return parent::install()
-            && Configuration::updateValue('PS_BLOCK_BESTSELLERS_TO_DISPLAY', 8)
+            && Configuration::updateValue('PS_BLOCK_BESTSELLERS_TO_DISPLAY', 16)
             && $this->registerHook('actionOrderStatusPostUpdate')
             && $this->registerHook('actionProductAdd')
             && $this->registerHook('actionProductUpdate')
             && $this->registerHook('actionProductDelete')
             && $this->registerHook('displayHome')
+            && $this->registerHook('displayHomeTab')
+            && $this->registerHook('displayHomeTabContent')
             && ProductSale::fillProductSales()
         ;
     }
@@ -114,43 +116,64 @@ class Ps_BestSellers extends Module implements WidgetInterface
     {
         parent::_clearCache($this->templateFile);
     }
+    public function hookdisplayHomeTab($params){
+        if (!$this->isCached('tab.tpl', $this->getCacheId('Ps_BestSellers-tab')))
+            Ps_BestSellers::$cache_new_products = $this->getBestSellers();
+
+        if (Ps_BestSellers::$cache_new_products === false)
+            return false;
+
+        return $this->display(__FILE__, 'tab.tpl', $this->getCacheId('Ps_BestSellers-tab'));
+    }
+
+    public function hookdisplayHomeTabContent($params)
+    {
+        $products = $this->getBestSellers();
+        $this->context->smarty->assign(
+            array(
+                'products' => $products,
+                'allNewProductsLink' => Context::getContext()->link->getPageLink('new-products'),
+            )
+        );
+        return $this->display(__FILE__, 'tab_content.tpl', $this->getCacheId('Ps_BestSellers-home'));
+    }
 
     public function getContent()
     {
         $output = '';
         if (Tools::isSubmit('submitBestSellers')) {
-            Configuration::updateValue('PS_BLOCK_BESTSELLERS_TO_DISPLAY', (int) Tools::getValue('PS_BLOCK_BESTSELLERS_TO_DISPLAY'));
+            Configuration::updateValue('PS_BLOCK_BESTSELLERS_TO_DISPLAY', (int)Tools::getValue('PS_BLOCK_BESTSELLERS_TO_DISPLAY'));
             $this->_clearCache('*');
-            $output .= $this->displayConfirmation($this->trans('The settings have been updated.', [], 'Admin.Notifications.Success'));
+            $output .= $this->displayConfirmation($this->trans('The settings have been updated.', array(), 'Admin.Notifications.Success'));
         }
 
-        return $output . $this->renderForm();
+        return $output.$this->renderForm();
     }
 
     public function renderForm()
     {
-        $fields_form = [
-            'form' => [
-                'legend' => [
-                    'title' => $this->trans('Settings', [], 'Admin.Global'),
-                    'icon' => 'icon-cogs',
-                ],
-                'input' => [
-                    [
+        $fields_form = array(
+            'form' => array(
+                'legend' => array(
+                    'title' => $this->trans('Settings', array(), 'Admin.Global'),
+                    'icon' => 'icon-cogs'
+                ),
+                'input' => array(
+                    array(
                         'type' => 'text',
-                        'label' => $this->trans('Products to display', [], 'Modules.Bestsellers.Admin'),
+                        'label' => $this->trans('Products to display', array(), 'Modules.Bestsellers.Admin'),
                         'name' => 'PS_BLOCK_BESTSELLERS_TO_DISPLAY',
-                        'desc' => $this->trans('Determine the number of product to display in this block', [], 'Modules.Bestsellers.Admin'),
+                        'desc' => $this->trans('Determine the number of product to display in this block', array(), 'Modules.Bestsellers.Admin'),
                         'class' => 'fixed-width-xs',
-                    ],
-                ],
-                'submit' => [
-                    'title' => $this->trans('Save', [], 'Admin.Actions'),
-                ],
-            ],
-        ];
+                    ),
+                ),
+                'submit' => array(
+                    'title' => $this->trans('Save', array(), 'Admin.Actions')
+                )
+            )
+        );
 
-        $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 
         $helper = new HelperForm();
         $helper->show_toolbar = false;
@@ -159,22 +182,22 @@ class Ps_BestSellers extends Module implements WidgetInterface
         $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'submitBestSellers';
-        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->tpl_vars = [
+        $helper->tpl_vars = array(
             'fields_value' => $this->getConfigFieldsValues(),
             'languages' => $this->context->controller->getLanguages(),
-            'id_language' => $this->context->language->id,
-        ];
+            'id_language' => $this->context->language->id
+        );
 
-        return $helper->generateForm([$fields_form]);
+        return $helper->generateForm(array($fields_form));
     }
 
     public function getConfigFieldsValues()
     {
-        return [
-            'PS_BLOCK_BESTSELLERS_TO_DISPLAY' => (int) Tools::getValue('PS_BLOCK_BESTSELLERS_TO_DISPLAY', Configuration::get('PS_BLOCK_BESTSELLERS_TO_DISPLAY')),
-        ];
+        return array(
+            'PS_BLOCK_BESTSELLERS_TO_DISPLAY' => (int)Tools::getValue('PS_BLOCK_BESTSELLERS_TO_DISPLAY', Configuration::get('PS_BLOCK_BESTSELLERS_TO_DISPLAY')),
+        );
     }
 
     public function renderWidget($hookName, array $configuration)
@@ -197,10 +220,10 @@ class Ps_BestSellers extends Module implements WidgetInterface
         $products = $this->getBestSellers();
 
         if (!empty($products)) {
-            return [
+            return array(
                 'products' => $products,
                 'allBestSellers' => Context::getContext()->link->getPageLink('best-sales'),
-            ];
+            );
         }
 
         return false;
@@ -212,20 +235,22 @@ class Ps_BestSellers extends Module implements WidgetInterface
             return false;
         }
 
-        // We will use the default core search provider to get the products
         $searchProvider = new BestSalesProductSearchProvider(
             $this->context->getTranslator()
         );
 
         $context = new ProductSearchContext($this->context);
 
-        // Build the search query
         $query = new ProductSearchQuery();
+
+        $nProducts = (int) Configuration::get('PS_BLOCK_BESTSELLERS_TO_DISPLAY');
+
         $query
-            ->setResultsPerPage((int) Configuration::get('PS_BLOCK_BESTSELLERS_TO_DISPLAY'))
+            ->setResultsPerPage($nProducts)
             ->setPage(1)
-            ->setSortOrder(new SortOrder('product', 'sales', 'desc'))
         ;
+
+        $query->setSortOrder(SortOrder::random());
 
         $result = $searchProvider->runQuery(
             $context,
@@ -236,27 +261,15 @@ class Ps_BestSellers extends Module implements WidgetInterface
 
         $presenterFactory = new ProductPresenterFactory($this->context);
         $presentationSettings = $presenterFactory->getPresentationSettings();
-        if (version_compare(_PS_VERSION_, '1.7.5', '>=')) {
-            $presenter = new \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter(
-                new ImageRetriever(
-                    $this->context->link
-                ),
-                $this->context->link,
-                new PriceFormatter(),
-                new ProductColorsRetriever(),
-                $this->context->getTranslator()
-            );
-        } else {
-            $presenter = new \PrestaShop\PrestaShop\Core\Product\ProductListingPresenter(
-                new ImageRetriever(
-                    $this->context->link
-                ),
-                $this->context->link,
-                new PriceFormatter(),
-                new ProductColorsRetriever(),
-                $this->context->getTranslator()
-            );
-        }
+        $presenter = new ProductListingPresenter(
+            new ImageRetriever(
+                $this->context->link
+            ),
+            $this->context->link,
+            new PriceFormatter(),
+            new ProductColorsRetriever(),
+            $this->context->getTranslator()
+        );
 
         $products_for_template = [];
 

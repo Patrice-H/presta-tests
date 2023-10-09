@@ -24,7 +24,7 @@ use BlockWishList;
 use Configuration;
 use Db;
 use Language;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tab;
 
 class Install

@@ -24,10 +24,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
-use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -36,25 +37,25 @@ if (!defined('_PS_VERSION_')) {
 class Ps_Specials extends Module implements WidgetInterface
 {
     private $templateFile;
+    protected static $cache_specials_products;
 
     public function __construct()
     {
         $this->name = 'ps_specials';
-        $this->tab = 'front_office_features';
         $this->author = 'PrestaShop';
-        $this->version = '1.0.2';
+        $this->version = '1.0.1';
         $this->need_instance = 0;
 
-        $this->ps_versions_compliancy = [
+        $this->ps_versions_compliancy = array(
             'min' => '1.7.0.0',
-            'max' => _PS_VERSION_,
-        ];
+            'max' => _PS_VERSION_
+        );
 
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->displayName = $this->trans('Specials block', [], 'Modules.Specials.Admin');
-        $this->description = $this->trans('Provide information on your special offers in a specific block displayed on your homepage.', [], 'Modules.Specials.Admin');
+        $this->displayName = $this->trans('Specials block', array(), 'Modules.Specials.Admin');
+        $this->description = $this->trans('Displays your products that are currently on sale in a dedicated block.', array(), 'Modules.Specials.Admin');
 
         $this->templateFile = 'module:ps_specials/views/templates/hook/ps_specials.tpl';
     }
@@ -63,7 +64,7 @@ class Ps_Specials extends Module implements WidgetInterface
     {
         $this->_clearCache('*');
 
-        Configuration::updateValue('BLOCKSPECIALS_SPECIALS_NBR', 8);
+        Configuration::updateValue('BLOCKSPECIALS_SPECIALS_NBR', 16);
 
         return parent::install()
             && $this->registerHook('actionProductAdd')
@@ -72,7 +73,9 @@ class Ps_Specials extends Module implements WidgetInterface
             && $this->registerHook('actionObjectSpecificPriceCoreDeleteAfter')
             && $this->registerHook('actionObjectSpecificPriceCoreAddAfter')
             && $this->registerHook('actionObjectSpecificPriceCoreUpdateAfter')
-            && $this->registerHook('displayHome');
+            && $this->registerHook('displayHome')
+            && $this->registerHook('displayHomeTab')
+            && $this->registerHook('displayHomeTabContent');
     }
 
     public function uninstall()
@@ -116,54 +119,66 @@ class Ps_Specials extends Module implements WidgetInterface
     {
         parent::_clearCache($this->templateFile);
     }
+    public function hookdisplayHomeTab($params)
+    {
 
+        if (!$this->isCached('tab.tpl', $this->getCacheId('Ps_specials-tab')))
+            Ps_Specials::$cache_specials_products = $this->getSpecialProducts();
+
+        if (Ps_Specials::$cache_specials_products === false)
+            return false;
+        return $this->display(__FILE__, 'tab.tpl', $this->getCacheId('Ps_specials-tab'));
+    }
+
+    public function hookdisplayHomeTabContent($params)
+    {
+        $products = $this->getSpecialProducts();
+        $this->context->smarty->assign(
+            array(
+                'products' => $products,
+                'allNewProductsLink' => Context::getContext()->link->getPageLink('new-products'),
+            )
+        );
+        return $this->display(__FILE__, 'tab_content.tpl', $this->getCacheId('Ps_specials-home'));
+    }
     public function getContent()
     {
         $output = '';
 
         if (Tools::isSubmit('submitSpecials')) {
-            $nbr = Tools::getValue('BLOCKSPECIALS_SPECIALS_NBR');
-            if (!Validate::isInt($nbr) || $nbr <= 0) {
-                $errors = $this->trans('The number of products is invalid. Please enter a positive number.', [], 'Modules.Specials.Admin');
-            }
-            if (!empty($errors)) {
-                $output = $this->displayError($errors);
-            } else {
-                Configuration::updateValue('BLOCKSPECIALS_SPECIALS_NBR', (int) Tools::getValue('BLOCKSPECIALS_SPECIALS_NBR'));
+            Configuration::updateValue('BLOCKSPECIALS_SPECIALS_NBR', (int)Tools::getValue('BLOCKSPECIALS_SPECIALS_NBR'));
 
-                $this->_clearCache('*');
+            $this->_clearCache('*');
 
-                $output .= $this->displayConfirmation($this->trans('The settings have been updated.', [], 'Admin.Notifications.Success'));
-            }
+            $output .= $this->displayConfirmation($this->trans('The settings have been updated.', array(), 'Admin.Notifications.Success'));
         }
-
-        return $output . $this->renderForm();
+        return $output.$this->renderForm();
     }
 
     public function renderForm()
     {
-        $fields_form = [
-            'form' => [
-                'legend' => [
-                    'title' => $this->trans('Settings', [], 'Admin.Global'),
-                    'icon' => 'icon-cogs',
-                ],
-                'input' => [
-                    [
+        $fields_form = array(
+            'form' => array(
+                'legend' => array(
+                    'title' => $this->trans('Settings', array(), 'Admin.Global'),
+                    'icon' => 'icon-cogs'
+                ),
+                'input' => array(
+                    array(
                         'type' => 'text',
-                        'label' => $this->trans('Products to display', [], 'Modules.Specials.Admin'),
+                        'label' => $this->trans('Products to display', array(), 'Modules.Specials.Admin'),
                         'name' => 'BLOCKSPECIALS_SPECIALS_NBR',
                         'class' => 'fixed-width-xs',
-                        'desc' => $this->trans('Define the number of products to be displayed in this block on home page.', [], 'Modules.Specials.Admin'),
-                    ],
-                ],
-                'submit' => [
-                    'title' => $this->trans('Save', [], 'Admin.Actions'),
-                ],
-            ],
-        ];
+                        'desc' => $this->trans('Define the number of products to be displayed in this block on home page.', array(), 'Modules.Specials.Admin'),
+                    ),
+                ),
+                'submit' => array(
+                    'title' => $this->trans('Save', array(), 'Admin.Actions'),
+                ),
+            ),
+        );
 
-        $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 
         $helper = new HelperForm();
         $helper->show_toolbar = false;
@@ -177,20 +192,20 @@ class Ps_Specials extends Module implements WidgetInterface
             '&tab_module=' . $this->tab .
             '&module_name=' . $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->tpl_vars = [
+        $helper->tpl_vars = array(
             'fields_value' => $this->getConfigFieldsValues(),
             'languages' => $this->context->controller->getLanguages(),
-            'id_language' => $this->context->language->id,
-        ];
+            'id_language' => $this->context->language->id
+        );
 
-        return $helper->generateForm([$fields_form]);
+        return $helper->generateForm(array($fields_form));
     }
 
     public function getConfigFieldsValues()
     {
-        return [
+        return array(
             'BLOCKSPECIALS_SPECIALS_NBR' => Tools::getValue('BLOCKSPECIALS_SPECIALS_NBR', Configuration::get('BLOCKSPECIALS_SPECIALS_NBR')),
-        ];
+        );
     }
 
     public function renderWidget($hookName = null, array $configuration = [])
@@ -213,50 +228,37 @@ class Ps_Specials extends Module implements WidgetInterface
         $products = $this->getSpecialProducts();
 
         if (!empty($products)) {
-            return [
+            return array(
                 'products' => $products,
                 'allSpecialProductsLink' => Context::getContext()->link->getPageLink('prices-drop'),
-            ];
+            );
         }
-
         return false;
     }
 
     private function getSpecialProducts()
     {
         $products = Product::getPricesDrop(
-            (int) Context::getContext()->language->id,
+            (int)Context::getContext()->language->id,
             0,
-            (int) Configuration::get('BLOCKSPECIALS_SPECIALS_NBR')
+            (int)Configuration::get('BLOCKSPECIALS_SPECIALS_NBR')
         );
 
         $assembler = new ProductAssembler($this->context);
 
         $presenterFactory = new ProductPresenterFactory($this->context);
         $presentationSettings = $presenterFactory->getPresentationSettings();
-        if (version_compare(_PS_VERSION_, '1.7.5', '>=')) {
-            $presenter = new \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter(
-                new ImageRetriever(
-                    $this->context->link
-                ),
-                $this->context->link,
-                new PriceFormatter(),
-                new ProductColorsRetriever(),
-                $this->context->getTranslator()
-            );
-        } else {
-            $presenter = new \PrestaShop\PrestaShop\Core\Product\ProductListingPresenter(
-                new ImageRetriever(
-                    $this->context->link
-                ),
-                $this->context->link,
-                new PriceFormatter(),
-                new ProductColorsRetriever(),
-                $this->context->getTranslator()
-            );
-        }
+        $presenter = new ProductListingPresenter(
+            new ImageRetriever(
+                $this->context->link
+            ),
+            $this->context->link,
+            new PriceFormatter(),
+            new ProductColorsRetriever(),
+            $this->context->getTranslator()
+        );
 
-        $products_for_template = [];
+        $products_for_template = array();
 
         if (is_array($products)) {
             foreach ($products as $rawProduct) {
@@ -269,15 +271,5 @@ class Ps_Specials extends Module implements WidgetInterface
         }
 
         return $products_for_template;
-    }
-
-    protected function getCacheId($name = null)
-    {
-        $cacheId = parent::getCacheId($name);
-        if (!empty($this->context->customer->id)) {
-            $cacheId .= '|' . (int) $this->context->customer->id;
-        }
-
-        return $cacheId;
     }
 }

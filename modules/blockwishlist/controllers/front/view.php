@@ -22,7 +22,7 @@ use PrestaShop\Module\BlockWishList\Access\CustomerAccess;
 use PrestaShop\Module\BlockWishList\Search\WishListProductSearchProvider;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrdersCollection;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 
 /**
  * View the content of a personal wishlist
@@ -78,14 +78,16 @@ class BlockWishlistViewModuleFrontController extends ProductListingFrontControll
         parent::init();
 
         if (false === $this->customerAccess->hasReadAccessToWishlist($this->wishlist)) {
-            $this->errors = [
-                $this->trans(
-                    'You do not have access to this wishlist.',
-                    [],
-                    'Modules.Blockwishlist.Shop'
-                ),
-            ];
-            $this->redirectWithNotifications('index.php');
+            header('HTTP/1.1 403 Forbidden');
+            header('Status: 403 Forbidden');
+            $this->errors[] = $this->trans(
+                'You do not have access to this wishlist.',
+                [],
+                'Modules.Blockwishlist.Shop'
+            );
+            $this->setTemplate('errors/forbidden');
+
+            return;
         }
 
         $this->context->smarty->assign(
@@ -165,7 +167,7 @@ class BlockWishlistViewModuleFrontController extends ProductListingFrontControll
         return new WishListProductSearchProvider(
             Db::getInstance(),
             $this->wishlist,
-            new SortOrdersCollection($this->getTranslator()),
+            new SortOrderFactory($this->getTranslator()),
             $this->getTranslator()
         );
     }
