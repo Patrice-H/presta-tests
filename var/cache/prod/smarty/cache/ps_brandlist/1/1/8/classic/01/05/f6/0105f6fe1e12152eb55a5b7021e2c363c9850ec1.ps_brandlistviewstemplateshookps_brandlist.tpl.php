@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 4.3.1, created on 2023-10-03 22:18:37
+/* Smarty version 4.3.1, created on 2023-10-06 00:46:29
   from 'module:ps_brandlistviewstemplateshookps_brandlist.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.3.1',
-  'unifunc' => 'content_651c771d186656_24975619',
+  'unifunc' => 'content_651f3cc5444d68_26061213',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -24,7 +24,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 31536000,
 ),true)) {
-function content_651c771d186656_24975619 (Smarty_Internal_Template $_smarty_tpl) {
+function content_651f3cc5444d68_26061213 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->smarty->ext->_tplFunction->registerTplFunctions($_smarty_tpl, array (
   'renderLogo' => 
   array (
@@ -44,6 +44,11 @@ $_smarty_tpl->smarty->ext->_tplFunction->registerTplFunctions($_smarty_tpl, arra
               
 <ul>
             <li class="facet-label">
+        <a href="http://localhost/presta-tests/brand/6-converse" title="Converse">
+          Converse
+        </a>
+      </li>
+                <li class="facet-label">
         <a href="http://localhost/presta-tests/brand/4-jack-jones" title="Jack &amp; Jones">
           Jack &amp; Jones
         </a>
@@ -54,16 +59,16 @@ $_smarty_tpl->smarty->ext->_tplFunction->registerTplFunctions($_smarty_tpl, arra
         </a>
       </li>
                 <li class="facet-label">
+        <a href="http://localhost/presta-tests/brand/5-nike" title="Nike">
+          Nike
+        </a>
+      </li>
+                <li class="facet-label">
         <a href="http://localhost/presta-tests/brand/3-puma" title="Puma">
           Puma
         </a>
       </li>
-                <li class="facet-label">
-        <a href="http://localhost/presta-tests/brand/2-ralph-lauren" title="Ralph lauren">
-          Ralph lauren
-        </a>
-      </li>
-      </ul>
+            </ul>
           </div>
   </section>
 </div>
