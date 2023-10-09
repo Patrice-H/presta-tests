@@ -2611,7 +2611,7 @@
   ),
   'ProductListingFrontController' => 
   array (
-    'path' => 'override\\classes\\controller\\ProductListingFrontController.php',
+    'path' => NULL,
     'type' => 'abstract class',
   ),
   'ProductListingFrontControllerCore' => 
