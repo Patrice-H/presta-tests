@@ -1,0 +1,199 @@
+<form>
+    <fieldset style="width: fit-content">
+        <!--
+        <label for="id_product">id_product</label>
+        <input type="number" name="id_product" id="id_product">
+        -->
+        <div>
+            <label for="name">name</label>
+            <input type="text" name="name" id="name">
+            <label for="name_category">name_category</label>
+            <input type="text" name="name_category" id="name_category">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="reference">reference</label>
+            <input type="text" name="reference" id="reference">
+            <label for="active">active</label>
+            <input type="number" name="active" id="active" value="1" min="0" max="1" style="width:2.5em">
+            <label for="on_sale">on_sale</label>
+            <input type="text" name="on_sale" id="on_sale" value="1" min="0" max="1" style="width:2.5em">
+        </div>
+    </fieldset>
+    <fieldset style="width: fit-content">
+        <div>
+            <label for="price">price</label>
+            <input type="text" name="price" id="price" style="width:7em">
+            <label for="tax_id">tax_id</label>
+            <input type="number" name="tax_id" id="tax_id" value="1" style="width:3em">
+            <label for="wholesale_price">wholesale_price</label>
+            <input type="number" name="wholesale_price" id="wholesale_price" value="0.000000" style="width:7em">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="discount_amount">discount_amount</label>
+            <input type="text" name="discount_amount" id="discount_amount" style="width:7em">
+            <label for="discount_percent">discount_percent</label>
+            <input type="number" name="discount_percent" id="discount_percent" min="0" max="100" style="width:3.5em">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="discount_from">discount_from</label>
+            <input type="text" name="discount_from" id="discount_from" style="width:7em">
+            <label for="discount_to">discount_to</label>
+            <input type="text" name="discount_to" id="discount_to" style="width:7em">
+        </div>
+    </fieldset>
+    <fieldset style="width: fit-content">
+        <div>
+            <label for="id_supplier">id_supplier</label>
+            <input type="text" name="id_supplier" id="id_supplier" style="width:3.5em">
+            <label for="supplier">supplier</label>
+            <input type="text" name="supplier" id="supplier">
+            <label for="manufacturer">manufacturer</label>
+            <input type="text" name="manufacturer" id="manufacturer">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="ean13">ean13</label>
+            <input type="text" name="ean13" id="ean13">
+            <label for="upc">upc</label>
+            <input type="text" name="upc" id="upc">
+            <label for="ecotax">ecotax</label>
+            <input type="number" name="ecotax" id="ecotax" value="0.000000" style="width:7em">
+        </div>
+    </fieldset>
+    <fieldset style="width: fit-content">
+        <div style="margin-top: 1em">
+            <label for="width">width</label>
+            <input type="number" name="width" id="width" value="0.000000" style="width:7em">
+            <label for="height">height</label>
+            <input type="number" name="height" id="height" value="0.000000" style="width:7em">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="depth">depth</label>
+            <input type="number" name="depth" id="depth" value="0.000000" style="width:7em">
+            <label for="weight">weight</label>
+            <input type="number" name="weight" id="weight" value="0.000000" style="width:7em">
+        </div>
+    </fieldset>
+    <fieldset style="width: fit-content">
+        <div>
+            <label for="delivery_in_stock_time">delivery_in_stock_time</label>
+            <input type="text" name="delivery_in_stock_time" id="delivery_in_stock_time">
+            <label for="delivery_out_stock_time">delivery_out_stock_time</label>
+            <input type="text" name="delivery_out_stock_time" id="delivery_out_stock_time">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="quantity">quantity</label>
+            <input type="number" name="quantity" id="quantity" style="width:3.5em">
+            <label for="minimal_quantity">minimal_quantity</label>
+            <input type="number" name="minimal_quantity" id="minimal_quantity" value="1" style="width:3.5em">
+            <label for="low_stock_threshold">low_stock_threshold</label>
+            <input type="text" name="low_stock_threshold" id="low_stock_threshold" style="width:3.5em">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="low_stock_alert">low_stock_alert</label>
+            <input type="number" name="low_stock_alert" id="low_stock_alert" value="5" style="width:3.5em">
+            <label for="visibility">visibility</label>
+            <input type="text" name="visibility" id="visibility" value="both" style="width:3.5em">
+            <label for="additional_shipping_cost">additional_shipping_cost</label>
+            <input type="number" name="additional_shipping_cost" id="additional_shipping_cost" value="0.000000" style="width:7em">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="unity">unity</label>
+            <input type="text" name="unity" id="unity">
+            <label for="unit_price">unit_price</label>
+            <input type="number" name="unit_price" id="unit_price" value="0.000000" style="width:7em">
+        </div>
+    </fieldset>
+    <fieldset style="display: flex; gap: 5px;">
+        <label for="description_short">description_short</label>
+        <textarea name="description_short" id="description_short" rows="5" cols="33"></textarea>
+        <label for="description">description</label>
+        <textarea name="description" id="description" rows="10" cols="50"></textarea>
+    </fieldset>
+    <fieldset style="width: fit-content">
+        <div>
+            <label for="tags">tags</label>
+            <input type="text" name="tags" id="tags">
+            <label for="meta_title">meta_title</label>
+            <input type="text" name="meta_title" id="meta_title">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="meta_keywords">meta_keywords</label>
+            <input type="text" name="meta_keywords" id="meta_keywords">
+            <label for="meta_description">meta_description</label>
+            <input type="text" name="meta_description" id="meta_description">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="link_rewrite">link_rewrite</label>
+            <input type="text" name="link_rewrite" id="link_rewrite">
+            <label for="text_when_in_stock">text_when_in_stock</label>
+            <input type="text" name="text_when_in_stock" id="text_when_in_stock">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="text_when_out_stock">text_when_out_stock</label>
+            <input type="text" name="text_when_out_stock" id="text_when_out_stock">
+            <label for="available_for_order">available_for_order</label>
+            <input type="text" name="available_for_order" id="available_for_order">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="available_date">available_date</label>
+            <input type="date" name="available_date" id="available_date" value="0000-00-00">
+            <label for="creation_date">creation_date</label>
+            <input type="date" name="creation_date" id="creation_date">
+            <label for="show_price">show_price</label>
+            <input type="number" name="show_price" id="show_price" value="1" min="0" max="1" style="width:2.5em">
+        </div>
+        <div style="margin-top: 1em">  
+            <label for="images_url">images_url</label>
+            <input type="text" name="images_url" id="images_url">
+            <label for="image_alt_text">image_alt_text</label>
+            <input type="text" name="image_alt_text" id="image_alt_text">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="delete_images">delete_images</label>
+            <input type="number" name="delete_images" id="delete_images" value="0" min="0" max="1" style="width:2.5em">
+            <label for="features">features</label>
+            <input type="text" name="features" id="features">
+            <label for="online_only">online_only</label>
+            <input type="number" name="online_only" id="online_only" value="0" min="0" max="1" style="width:2.5em">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="condition">condition</label>
+            <input type="text" name="condition" id="condition" value="new">
+            <label for="customizable">customizable</label>
+            <input type="number" name="customizable" id="customizable" value="0" min="0" max="1" style="width:2.5em">
+            <label for="uploadable_files">uploadable_files</label>
+            <input type="number" name="uploadable_files" id="uploadable_files" value="0" min="0" max="1" style="width:2.5em">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="text_fields">text_fields</label>
+            <input type="number" name="text_fields" id="text_fields" value="0" min="0" max="1" style="width:3.5em">
+            <label for="out_of_stock">out_of_stock</label>
+            <input type="number" name="out_of_stock" id="out_of_stock" value="2" style="width:3.5em">
+            <label for="is_virtual">is_virtual</label>
+            <input type="number" name="is_virtual" id="is_virtual" value="0" min="0" max="1" style="width:2.5em">
+            <label for="file_url">file_url</label>
+            <input type="text" name="file_url" id="file_url">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="expiration_date">expiration_date</label>
+            <input type="date" name="expiration_date" id="expiration_date">
+            <label for="number_of_days">number_of_days</label>
+            <input type="number" name="number_of_days" id="number_of_days" style="width:3.5em">
+            <label for="shop_name">shop_name</label>
+            <input type="text" name="shop_name" id="shop_name" value="Atout-Charme">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="advanced_stock_management">advanced_stock_management</label>
+            <input type="text" name="advanced_stock_management" id="advanced_stock_management">
+            <label for="depends_on_stock">depends_on_stock</label>
+            <input type="text" name="depends_on_stock" id="depends_on_stock">
+        </div>
+        <div style="margin-top: 1em">
+            <label for="warehouse">warehouse</label>
+            <input type="text" name="warehouse" id="warehouse">
+            <label for="acessories">acessories</label>
+            <input type="text" name="acessories" id="acessories">
+        </div>
+    </fieldset>
+    <button type="submit">Save product</button>
+</form>
